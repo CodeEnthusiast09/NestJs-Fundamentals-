@@ -1,0 +1,114 @@
+### APPLICATION PORT
+GET http://localhost:3000
+
+
+### FETCH ALL SONG REQUEST
+GET http://localhost:3000/songs
+
+### FETCH ALL SONG ARTIST
+GET http://localhost:3000/artists
+
+### FIND ONE SONG REQUEST
+GET http://localhost:3000/songs/1
+
+### CREATE NEW SONGS REQUEST
+POST  http://localhost:3000/songs
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5S25hY2tzQGdtYWlsLmNvbSIsInVzZXJJZCI6MSwiYXJ0aXN0SWQiOjEsImlhdCI6MTcyNzMwMzkyNiwiZXhwIjoxNzI3MzkwMzI2fQ.KYDwZUGD3-A6lEH9lznk7YHJdTqGgD7T2qZXQZ3iiNE
+
+{
+        "title": "Migos",
+        "artists": [1],
+        "releasedDate": "2023-05-11",
+        "duration": "02:34",
+        "lyrics": "Mama eh! mama eh!! sexy! sexy!! mama eh!!! trabayeh! trabayeh!! so le gbe mi trabaye!!! "
+}
+
+### UPDATE SONGS REQUEST
+PUT  http://localhost:3000/songs/23
+Content-Type: application/json
+
+{
+        "title": "Whatsapp",
+        "artists": [1, 4],
+        "releasedDate": "2022-09-30",
+        "duration": "02:14",
+        "lyrics": "Who be that guy wey text you? i no dey check your whatsapp, that's not my thing baby. i no like tlak wetin go vex you."
+}
+
+
+
+### DELETE SONGS REQUEST
+DELETE   http://localhost:3000/songs/32
+
+### CREATE A PLAYLIST REQUEST
+POST http://localhost:3000/playlists
+Content-Type: application/json
+
+{
+        "name": "Vibes and Cheer",
+        "songs": [27, 26, 28],
+        "user": 60
+}
+
+### SIGNUP ARTIST
+POST http://localhost:3000/auth/artistSignup
+Content-Type: application/json
+
+{
+        "artistName": "Anne",
+        "email": "oyindolapodemuyiwa@gmail.com",
+        "userId": 1,
+        "password": "eminent_09"
+}
+
+### SIGNUP USER
+POST http://localhost:3000/auth/signup
+Content-Type: application/json
+
+{
+        "firstName": "Oyindolapo",
+        "lastName": "Ademuyiwa",
+        "email": "oyindolapodemuyiwa@gmail.com",
+        "password": "eminent_09"
+}
+
+### LOGIN ARTIST
+POST http://localhost:3000/auth/artistLogin
+Content-Type: application/json
+
+{
+        "email": "oyindolapodemuyiwa@gmail.com",
+        "password": "eminent_09"
+}
+
+### LOGIN USER
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+        "email": "olusholaonileimo@gmail.com",
+        "password": "eminent_09"
+}
+
+### Profile
+### TESTING JWT AUTH
+GET http://localhost:3000/auth/profile
+Authorization: Bearer 32d5ba56-7589-4fa0-9b6e-f002144c7e2b
+
+### Enable 2FA Authentication
+POST http://localhost:3000/auth/enable-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo1LCJpYXQiOjE3MjgxMzk1OTEsImV4cCI6MTcyODIyNTk5MX0.0ySiCIf5Mx2G_rkkU340szpvz7XqSTwFlTW_Gs22rYw
+
+### Disable 2FA Authentication
+GET http://localhost:3000/auth/disable-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo0LCJpYXQiOjE3MjgxMzg2OTUsImV4cCI6MTcyODIyNTA5NX0.JHxLtcetZO5T6W-hdLVKgQndcgTCWEg9tllrSXRMHaE
+
+### Validate 2FA Token
+POST http://localhost:3000/auth/validate-2fa
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo0LCJpYXQiOjE3MjgxMzg2OTUsImV4cCI6MTcyODIyNTA5NX0.JHxLtcetZO5T6W-hdLVKgQndcgTCWEg9tllrSXRMHaE
+Content-Type: application/json
+
+{
+        "token": "104820" 
+}

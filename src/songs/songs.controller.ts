@@ -1,14 +1,12 @@
 import {
   Body,
   Controller,
-  DefaultValuePipe,
   Delete,
   Get,
   HttpException,
   HttpStatus,
   Inject,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -19,10 +17,14 @@ import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song-dto';
 import { Connection } from 'src/common/constants/connection';
 import { Song } from 'src/entities/songs/songs.entity';
-import { UpdateSongDto } from './dto/updateSongDto';
+import { UpdateSongDto } from './dto/update-song-dto';
 import { UpdateResult } from 'typeorm';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { JwtArtistGuard } from 'src/auth/artist-jwt-guard';
+import {
+  createPaginationDecorators,
+  normalizePagination,
+} from 'src/common/utils/pagination.utils';
 
 @Controller('songs')
 export class SongsController {
@@ -45,14 +47,17 @@ export class SongsController {
 
   @Get()
   findall(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('page', ...createPaginationDecorators()) page: number = 1,
+    @Query('limit', ...createPaginationDecorators())
+    limit: number = 10,
   ): Promise<Pagination<Song>> {
     try {
-      limit = limit > 100 ? 100 : limit;
+      const { page: normalizedPage, limit: normalizedLimit } =
+        normalizePagination({ page, limit });
+
       return this.songsService.paginate({
-        page,
-        limit,
+        page: normalizedPage,
+        limit: normalizedLimit,
       });
     } catch (error) {
       throw new HttpException(
@@ -66,20 +71,23 @@ export class SongsController {
   }
 
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Promise<Song> {
+  findOne(
+    @Param('id')
+    id: string,
+  ): Promise<Song> {
     return this.songsService.findOne(id);
   }
 
   @Put(':id')
   update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: string,
     @Body() updateSongDTO: UpdateSongDto,
   ): Promise<UpdateResult> {
     return this.songsService.update(id, updateSongDTO);
   }
 
   @Delete(':id')
-  delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  delete(@Param('id') id: string): Promise<void> {
     return this.songsService.remove(id);
   }
 }

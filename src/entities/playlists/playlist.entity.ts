@@ -3,20 +3,22 @@ import { User } from 'src/entities/users/users.entity';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 @Entity('playlists')
 export class Playlist {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   name: string;
 
-  //Each Playlist will have multiple songs
-  @OneToMany(() => Song, (song) => song.playList)
+  // Each Playlist will have multiple songs
+  @ManyToMany(() => Song, (song) => song.playlist, { cascade: true })
+  @JoinTable({ name: 'playlists_songs' })
   songs: Song[];
 
   // Many Playlist can belong to a single unique user

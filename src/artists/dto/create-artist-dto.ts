@@ -17,7 +17,7 @@ export class ArtistSignupDto {
 
   @IsNotEmpty()
   @IsNumber()
-  userId: number;
+  userId: string;
 
   @IsNotEmpty()
   @IsString()

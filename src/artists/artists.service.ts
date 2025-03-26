@@ -17,7 +17,7 @@ export class ArtistsService {
     private userRepository: Repository<User>,
   ) {}
 
-  findArtist(userId: number): Promise<Artist> {
+  findArtist(userId: string): Promise<Artist> {
     return this.artistRepo.findOneBy({ user: { id: userId } });
   }
 

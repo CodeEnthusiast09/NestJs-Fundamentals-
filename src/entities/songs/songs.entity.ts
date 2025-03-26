@@ -3,35 +3,35 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Artist } from '../artists/artists.entity';
 import { Playlist } from '../playlists/playlist.entity';
+import { IsDate } from 'class-validator';
 
 @Entity('songs')
 export class Song {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   title: string;
 
-  // @Column('varchar', { array: true })
-  // artists: string[];
   @ManyToMany(() => Artist, (artist) => artist.songs, { cascade: true })
   @JoinTable({ name: 'songs_artists' })
   artists: Artist[];
 
   @Column({ type: 'date' })
-  releasedDate: Date;
+  @IsDate()
+  releaseDate: Date;
 
-  @Column({ type: 'time' })
-  duration: Date;
+  @Column({ type: 'int' })
+  duration: number;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   lyrics: string;
 
-  @ManyToOne(() => Playlist, (playList) => playList.songs)
-  playList: Playlist;
+  //  One song can belong to multiple playlists
+  @ManyToMany(() => Playlist, (playlist) => playlist.songs)
+  playlist: Playlist;
 }

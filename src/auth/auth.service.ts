@@ -78,7 +78,7 @@ export class AuthService {
     };
   }
 
-  async enable2FA(userId: number): Promise<Enable2FAType> {
+  async enable2FA(userId: string): Promise<Enable2FAType> {
     const user = await this.userService.findById(userId);
     if (user.enable2FA) {
       return { secret: user.twoFASecret };
@@ -90,12 +90,12 @@ export class AuthService {
     return { secret: user.twoFASecret };
   }
 
-  async disable2FA(userId: number): Promise<UpdateResult> {
+  async disable2FA(userId: string): Promise<UpdateResult> {
     return this.userService.disable2FA(userId);
   }
 
   async validate2FAToken(
-    userId: number,
+    userId: string,
     token: string,
   ): Promise<{ verified: boolean }> {
     try {

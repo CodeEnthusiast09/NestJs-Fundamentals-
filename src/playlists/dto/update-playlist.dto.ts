@@ -1,9 +1,9 @@
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsOptional, IsString } from 'class-validator';
 // import { Song } from 'src/entities/songs/songs.entity';
 
-export class CreatePlayListDto {
+export class UpdatePlayListDto {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly name: string;
 
   @IsString({ each: true })
@@ -12,6 +12,6 @@ export class CreatePlayListDto {
   readonly songs: string[];
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly user: string;
 }

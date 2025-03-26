@@ -12,8 +12,8 @@ import {
 
 @Entity('artists')
 export class Artist {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   artistName: string;

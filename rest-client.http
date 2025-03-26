@@ -14,7 +14,7 @@ GET http://localhost:3000/songs/1
 ### CREATE NEW SONGS REQUEST
 POST  http://localhost:3000/songs
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF5S25hY2tzQGdtYWlsLmNvbSIsInVzZXJJZCI6MSwiYXJ0aXN0SWQiOjEsImlhdCI6MTcyNzMwMzkyNiwiZXhwIjoxNzI3MzkwMzI2fQ.KYDwZUGD3-A6lEH9lznk7YHJdTqGgD7T2qZXQZ3iiNE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF0aWxsYUBnbWFpbC5jb20iLCJ1c2VySWQiOjIsImlhdCI6MTc0MjY0MjI3MCwiZXhwIjoxNzQyNzI4NjcwfQ.KBMoFBST19AIPT6M-is0T0LXwrRdAdzVkKEGkcD3msQ
 
 {
         "title": "Migos",
@@ -56,9 +56,9 @@ POST http://localhost:3000/auth/artistSignup
 Content-Type: application/json
 
 {
-        "artistName": "Anne",
-        "email": "oyindolapodemuyiwa@gmail.com",
-        "userId": 1,
+        "artistName": "Atilla",
+        "email": "atilla@gmail.com",
+        "userId": 2,
         "password": "eminent_09"
 }
 
@@ -67,9 +67,9 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-        "firstName": "Oyindolapo",
-        "lastName": "Ademuyiwa",
-        "email": "oyindolapodemuyiwa@gmail.com",
+        "firstName": "Moses",
+        "lastName": "Olayemi",
+        "email": "atilla@gmail.com",
         "password": "eminent_09"
 }
 
@@ -78,7 +78,7 @@ POST http://localhost:3000/auth/artistLogin
 Content-Type: application/json
 
 {
-        "email": "oyindolapodemuyiwa@gmail.com",
+        "email": "atilla@gmail.com",
         "password": "eminent_09"
 }
 
@@ -87,26 +87,26 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json
 
 {
-        "email": "olusholaonileimo@gmail.com",
+        "email": "atilla@gmail.com",
         "password": "eminent_09"
 }
 
 ### Profile
 ### TESTING JWT AUTH
 GET http://localhost:3000/auth/profile
-Authorization: Bearer 32d5ba56-7589-4fa0-9b6e-f002144c7e2b
+Authorization: Bearer eb4b1a6b-151d-483b-905b-1c64dde04f40
 
 ### Enable 2FA Authentication
 POST http://localhost:3000/auth/enable-2fa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo1LCJpYXQiOjE3MjgxMzk1OTEsImV4cCI6MTcyODIyNTk5MX0.0ySiCIf5Mx2G_rkkU340szpvz7XqSTwFlTW_Gs22rYw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF0aWxsYUBnbWFpbC5jb20iLCJ1c2VySWQiOjIsImlhdCI6MTc0MjY0MjI3MCwiZXhwIjoxNzQyNzI4NjcwfQ.KBMoFBST19AIPT6M-is0T0LXwrRdAdzVkKEGkcD3msQ
 
 ### Disable 2FA Authentication
 GET http://localhost:3000/auth/disable-2fa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo0LCJpYXQiOjE3MjgxMzg2OTUsImV4cCI6MTcyODIyNTA5NX0.JHxLtcetZO5T6W-hdLVKgQndcgTCWEg9tllrSXRMHaE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImF0aWxsYUBnbWFpbC5jb20iLCJ1c2VySWQiOjIsImlhdCI6MTc0MjY0MjI3MCwiZXhwIjoxNzQyNzI4NjcwfQ.KBMoFBST19AIPT6M-is0T0LXwrRdAdzVkKEGkcD3msQ
 
 ### Validate 2FA Token
 POST http://localhost:3000/auth/validate-2fa
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkZW11eWl3YW95aW5kb2xhcG9AZ21haWwuY29tIiwidXNlcklkIjo0LCJpYXQiOjE3MjgxMzg2OTUsImV4cCI6MTcyODIyNTA5NX0.JHxLtcetZO5T6W-hdLVKgQndcgTCWEg9tllrSXRMHaE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im95aW5kb2xhcG9kZW11eWl3YUBnbWFpbC5jb20iLCJ1c2VySWQiOjEsImlhdCI6MTc0MjY0MTk3MCwiZXhwIjoxNzQyNzI4MzcwfQ.yF9Bn0UipWO1l9Sd4MMHnQYt8iNb10BUxlhHwMz6IRc
 Content-Type: application/json
 
 {

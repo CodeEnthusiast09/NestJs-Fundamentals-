@@ -15,7 +15,7 @@ import { ApiKeyStrategy } from './apiKeyStrategy';
     JwtModule.register({
       secret: authConstants.secret,
       signOptions: {
-        expiresIn: '1d',
+        expiresIn: '12h',
       },
     }),
     PassportModule,

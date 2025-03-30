@@ -7,6 +7,7 @@ export class ApiKeyStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super();
   }
+
   async validate(apiKey: string) {
     const user = await this.authService.validateUserByApiKey(apiKey);
     if (!user) {

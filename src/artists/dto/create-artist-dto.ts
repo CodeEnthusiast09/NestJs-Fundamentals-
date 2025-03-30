@@ -1,10 +1,4 @@
-import {
-  IsEmail,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class ArtistSignupDto {
   @IsNotEmpty()
@@ -16,7 +10,7 @@ export class ArtistSignupDto {
   email: string;
 
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   userId: string;
 
   @IsNotEmpty()

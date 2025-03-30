@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Playlist } from 'src/entities/playlists/playlist.entity';
-import { In, Repository, UpdateResult } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreatePlayListDto } from './dto/create-playlist-dto';
 import { Song } from 'src/entities/songs/songs.entity';
 import { User } from 'src/entities/users/users.entity';
@@ -46,7 +46,7 @@ export class PlayListsService {
   async update(
     playlistId: string,
     updateDto: UpdatePlayListDto,
-  ): Promise<UpdateResult> {
+  ): Promise<Playlist> {
     // Find the existing playlist
     const playlist = await this.playListRepo.findOne({
       where: { id: playlistId },
@@ -84,6 +84,41 @@ export class PlayListsService {
       ];
     }
 
-    return this.playListRepo.update(playlistId, playlist);
+    return this.playListRepo.save(playlist);
+  }
+
+  async findAll(): Promise<Playlist[]> {
+    return this.playListRepo.find({
+      relations: {
+        songs: true,
+        user: true,
+      },
+    });
+  }
+
+  async findOne(id: string): Promise<Playlist> {
+    const playlist = await this.playListRepo.findOne({
+      where: { id },
+      relations: {
+        songs: true,
+        user: true,
+      },
+    });
+
+    if (!playlist) {
+      throw new NotFoundException('Playlist not found');
+    }
+
+    return playlist;
+  }
+
+  async remove(id: string): Promise<void> {
+    const playlist = await this.playListRepo.findOneBy({ id });
+
+    if (!playlist) {
+      throw new NotFoundException('Playlist not found');
+    }
+
+    await this.playListRepo.remove(playlist);
   }
 }

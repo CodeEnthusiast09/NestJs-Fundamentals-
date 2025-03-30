@@ -47,8 +47,9 @@ export class ArtistsService {
   }
 
   async findOne(data: ArtistLoginDto): Promise<Artist> {
-    const artist = await this.artistRepo.findOneBy({
-      email: data.email,
+    const artist = await this.artistRepo.findOne({
+      where: { email: data.email },
+      relations: ['user'],
     });
     if (!artist) {
       throw new UnauthorizedException('Could not find artist');

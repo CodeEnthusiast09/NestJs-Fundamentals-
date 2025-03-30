@@ -17,7 +17,7 @@ export class Playlist {
   name: string;
 
   // Each Playlist will have multiple songs
-  @ManyToMany(() => Song, (song) => song.playlist, { cascade: true })
+  @ManyToMany(() => Song, (song) => song.playlists, { cascade: true })
   @JoinTable({ name: 'playlists_songs' })
   songs: Song[];
 

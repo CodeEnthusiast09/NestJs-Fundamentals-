@@ -24,7 +24,7 @@ export class SongsService {
   async paginate(options: IPaginationOptions): Promise<Pagination<Song>> {
     const queryBuilder = this.songRepository.createQueryBuilder('c');
 
-    queryBuilder.orderBy('c.releasedDate', 'DESC');
+    queryBuilder.orderBy('c.releaseDate', 'DESC');
 
     return paginate<Song>(queryBuilder, options);
   }
@@ -51,7 +51,12 @@ export class SongsService {
   }
 
   async findAll(): Promise<Song[]> {
-    return this.songRepository.find();
+    return this.songRepository.find({
+      relations: {
+        artists: true,
+        playlists: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<Song> {

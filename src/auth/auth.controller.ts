@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
 import { User } from 'src/entities/users/users.entity';
 import { UsersService } from 'src/users/users.service';
@@ -52,20 +45,20 @@ export class AuthController {
   @Post('enable-2fa')
   @UseGuards(JwtAuthGuard)
   enable2FA(
-    @Request()
-    req,
+    @Req()
+    request,
   ): Promise<Enable2FAType> {
-    console.log(req.user);
-    return this.authService.enable2FA(req.user.userId);
+    console.log(request.user);
+    return this.authService.enable2FA(request.user.userId);
   }
 
   @Get('disable-2fa')
   @UseGuards(JwtAuthGuard)
   async disable2FA(
-    @Request()
-    req,
+    @Req()
+    request,
   ): Promise<UpdateResult> {
-    await this.authService.disable2FA(req.user.userId);
+    await this.authService.disable2FA(request.user.userId);
     return {
       raw: '2FA successfully disabled',
       generatedMaps: [{ raw: '2FA successfully disabled' }],
@@ -75,13 +68,13 @@ export class AuthController {
   @Post('validate-2fa')
   @UseGuards(JwtAuthGuard)
   validate2FA(
-    @Request()
-    req,
+    @Req()
+    request,
     @Body()
     ValidateTokenDTO: ValidateTokenDTO,
   ): Promise<{ verified: boolean }> {
     return this.authService.validate2FAToken(
-      req.user.userId,
+      request.user.userId,
       ValidateTokenDTO.token,
     );
   }
@@ -89,13 +82,13 @@ export class AuthController {
   @Get('profile')
   @UseGuards(AuthGuard('bearer'))
   getProfile(
-    @Request()
-    req,
+    @Req()
+    request,
   ) {
-    delete req.user.password;
+    delete request.user.password;
     return {
       msg: 'authenticated with api key',
-      user: req.user,
+      user: request.user,
     };
   }
 }

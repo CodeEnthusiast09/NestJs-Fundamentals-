@@ -17,9 +17,14 @@ export class JwtArtistGuard extends AuthGuard('jwt') {
 
   handleRequest<TUser = PayloadType>(err: any, user: any): TUser {
     if (err || !user) {
-      throw err || new UnauthorizedException();
+      throw err || new UnauthorizedException('Auth failed');
     }
-    console.log(user);
+
+    console.log('JWT payload:', JSON.stringify(user, null, 2));
+
+    if (!user.artistId) {
+      throw new UnauthorizedException('Artist permissions required');
+    }
 
     if (user.artistId) {
       return user;

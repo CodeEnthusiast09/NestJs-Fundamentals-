@@ -62,7 +62,7 @@ export class AuthService {
 
   async artistLogin(
     artistLoginDto: ArtistLoginDto,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ message: string; access_token: string }> {
     const artist = await this.artistService.findOne(artistLoginDto);
 
     if (
@@ -72,8 +72,13 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { email: artist.email, artist: artist.id };
+    const payload: PayloadType = {
+      email: artist.email,
+      artistId: artist.id,
+      userId: artist.user.id,
+    };
     return {
+      message: 'Login successful',
       access_token: this.jwtService.sign(payload),
     };
   }

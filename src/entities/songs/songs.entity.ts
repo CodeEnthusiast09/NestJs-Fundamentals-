@@ -32,6 +32,6 @@ export class Song {
   lyrics: string;
 
   //  One song can belong to multiple playlists
-  @ManyToMany(() => Playlist, (playlist) => playlist.songs)
-  playlist: Playlist;
+  @ManyToMany(() => Playlist, (playlists) => playlists.songs)
+  playlists: Playlist;
 }

@@ -10,7 +10,7 @@ import {
   Post,
   Put,
   Query,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { SongsService } from './songs.service';
@@ -25,6 +25,7 @@ import {
   createPaginationDecorators,
   normalizePagination,
 } from 'src/common/utils/pagination.utils';
+import { Request as ExpressRequest } from 'express';
 
 @Controller('songs')
 export class SongsController {
@@ -40,8 +41,11 @@ export class SongsController {
 
   @Post()
   @UseGuards(JwtArtistGuard)
-  create(@Body() createSongDto: CreateSongDto, @Request() req): Promise<Song> {
-    console.log('Request:', req.user);
+  create(
+    @Body() createSongDto: CreateSongDto,
+    @Req() request: ExpressRequest,
+  ): Promise<Song> {
+    console.log('Request:', request.user);
     return this.songsService.create(createSongDto);
   }
 

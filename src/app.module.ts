@@ -15,7 +15,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
 import { ArtistsController } from './artists/artists.controller';
-import { dataSourceOptions } from 'db/data-source';
+import { typeOrmAsyncConfig } from 'db/data-source';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
@@ -27,7 +27,7 @@ const proConfig = { port: 4000 };
 @Module({
   imports: [
     SongsModule,
-    TypeOrmModule.forRoot(dataSourceOptions),
+    TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     PlayListsModule,
     AuthModule,
     UsersModule,

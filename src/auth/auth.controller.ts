@@ -91,4 +91,9 @@ export class AuthController {
       user: request.user,
     };
   }
+
+  @Get('test')
+  testEnv() {
+    return this.authService.getEnvVariables();
+  }
 }

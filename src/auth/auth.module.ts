@@ -5,18 +5,23 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { JWTStrategy } from './jwt-strategy';
 import { PassportModule } from '@nestjs/passport';
-import { authConstants } from './auth.constants';
+// import { authConstants } from './auth.constants';
 import { ArtistsModule } from 'src/artists/artists.module';
 import { ApiKeyStrategy } from './apiKeyStrategy';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     UsersModule,
-    JwtModule.register({
-      secret: authConstants.secret,
-      signOptions: {
-        expiresIn: '12h',
-      },
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get<string>('secret'),
+        signOptions: {
+          expiresIn: '1d',
+        },
+      }),
+      inject: [ConfigService],
     }),
     PassportModule,
     ArtistsModule,

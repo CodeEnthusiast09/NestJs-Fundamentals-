@@ -14,7 +14,7 @@ export class SeedService {
       const manager = queryRunner.manager;
       await seedData(manager);
       await queryRunner.commitTransaction();
-      console.log('Seeding successful');
+      // console.log('Seeding successful');
     } catch (err) {
       console.log('Error during database seeding:', err);
       await queryRunner.rollbackTransaction();

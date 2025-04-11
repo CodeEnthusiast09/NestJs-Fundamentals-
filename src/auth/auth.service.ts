@@ -89,7 +89,7 @@ export class AuthService {
       return { secret: user.twoFASecret };
     }
     const secret = speakeasy.generateSecret();
-    console.log(secret);
+    // console.log(secret);
     user.twoFASecret = secret.base32;
     await this.userService.updateSecretKey(user.id, user.twoFASecret);
     return { secret: user.twoFASecret };

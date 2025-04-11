@@ -21,12 +21,12 @@ import { Global, Module } from '@nestjs/common';
             entities: [`${__dirname}/../**/**.entity{.ts,.js}`],
           });
           await dataSource.initialize();
-          console.log('Database connected successfully');
-          console.log(process.env.DB_PASSWORD);
-          console.log(typeof process.env.DB_PASSWORD);
+          // console.log('Database connected successfully');
+          // console.log(process.env.DB_PASSWORD);
+          // console.log(typeof process.env.DB_PASSWORD);
           return dataSource;
         } catch (error) {
-          console.log('Error connecting to database');
+          // console.log('Error connecting to database');
           throw error;
         }
       },

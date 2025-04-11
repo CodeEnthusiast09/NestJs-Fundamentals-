@@ -20,8 +20,6 @@ export class JwtArtistGuard extends AuthGuard('jwt') {
       throw err || new UnauthorizedException('Auth failed');
     }
 
-    console.log('JWT payload:', JSON.stringify(user, null, 2));
-
     if (!user.artistId) {
       throw new UnauthorizedException('Artist permissions required');
     }

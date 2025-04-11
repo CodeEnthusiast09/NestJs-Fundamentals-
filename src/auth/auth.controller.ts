@@ -48,7 +48,7 @@ export class AuthController {
     @Req()
     request,
   ): Promise<Enable2FAType> {
-    console.log(request.user);
+    // console.log(request.user);
     return this.authService.enable2FA(request.user.userId);
   }
 

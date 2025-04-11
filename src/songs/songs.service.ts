@@ -21,10 +21,20 @@ export class SongsService {
     private artistRepository: Repository<Artist>,
   ) {}
 
-  async paginate(options: IPaginationOptions): Promise<Pagination<Song>> {
+  async paginate(
+    options: IPaginationOptions,
+    sortBy = 'releaseDate',
+    order: 'ASC' | 'DESC' = 'DESC',
+  ): Promise<Pagination<Song>> {
     const queryBuilder = this.songRepository.createQueryBuilder('c');
 
-    queryBuilder.orderBy('c.releaseDate', 'DESC');
+    const validSortFields = ['releaseDate', 'title'];
+
+    if (validSortFields.includes(sortBy)) {
+      queryBuilder.orderBy(`c.${sortBy}`, order);
+    } else {
+      queryBuilder.orderBy('c.releaseDate', 'DESC');
+    }
 
     return paginate<Song>(queryBuilder, options);
   }

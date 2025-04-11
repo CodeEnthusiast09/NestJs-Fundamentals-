@@ -9,7 +9,7 @@ import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { DevConfigService } from './common/providers/DevConfigService';
-import { DataSource } from 'typeorm';
+// import { DataSource } from 'typeorm';
 import { PlayListsModule } from 'src/playlists/playLists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -20,6 +20,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
 import configuration from './config/configuration';
+import { validate } from 'env.validation';
 
 const devConfig = { port: 3000 };
 const proConfig = { port: 4000 };
@@ -33,9 +34,10 @@ const proConfig = { port: 4000 };
     UsersModule,
     ArtistsModule,
     ConfigModule.forRoot({
-      envFilePath: ['.development.env', '.production.env'],
+      envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
       load: [configuration],
+      validate: validate,
     }),
     SeedModule,
   ],
@@ -55,8 +57,8 @@ const proConfig = { port: 4000 };
   ],
 })
 export class AppModule implements NestModule {
-  constructor(private dataSource: DataSource) {
-    console.log('Database Name:', this.dataSource.driver.database);
+  constructor(/*private dataSource: DataSource*/) {
+    // console.log('Database Name:', this.dataSource.driver.database);
   }
   configure(consumer: MiddlewareConsumer) {
     consumer

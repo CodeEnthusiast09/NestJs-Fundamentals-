@@ -54,15 +54,28 @@ export class SongsController {
     @Query('page', ...createPaginationDecorators()) page: number = 1,
     @Query('limit', ...createPaginationDecorators())
     limit: number = 10,
+    @Query('sortBy', ...createPaginationDecorators())
+    sortBy: string = 'releaseDate',
+    @Query('order', ...createPaginationDecorators())
+    order: 'ASC' | 'DESC' = 'DESC',
   ): Promise<Pagination<Song>> {
     try {
-      const { page: normalizedPage, limit: normalizedLimit } =
-        normalizePagination({ page, limit });
-
-      return this.songsService.paginate({
+      const {
         page: normalizedPage,
         limit: normalizedLimit,
-      });
+        sortBy: normalizedSortBy,
+        order: normalizedOrder,
+      } = normalizePagination({ page, limit, sortBy, order });
+
+      return this.songsService.paginate(
+        {
+          page: normalizedPage,
+          limit: normalizedLimit,
+        },
+
+        normalizedSortBy,
+        normalizedOrder,
+      );
     } catch (error) {
       throw new HttpException(
         'server error',

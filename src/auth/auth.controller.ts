@@ -1,20 +1,22 @@
 import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateUserDTO } from 'src/users/dto/create-user-dto';
-import { User } from 'src/entities/users/users.entity';
+import { User } from 'src/users/users.entity';
 import { UsersService } from 'src/users/users.service';
 import { LoginDTO } from './dto/login-dto';
 import { AuthService } from './auth.service';
 import { ArtistsService } from 'src/artists/artists.service';
 import { ArtistSignupDto } from 'src/artists/dto/create-artist-dto';
-import { Artist } from 'src/entities/artists/artists.entity';
+import { Artist } from 'src/artists/artists.entity';
 import { ArtistLoginDto } from 'src/artists/dto/artist-login-dto';
 import { JwtAuthGuard } from './jwt-guard';
 import { Enable2FAType } from './types/auth-types';
 import { UpdateResult } from 'typeorm';
 import { ValidateTokenDTO } from './dto/validate-token-dto';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(
     private userService: UsersService,
@@ -23,6 +25,11 @@ export class AuthController {
   ) {}
 
   @Post('signup')
+  @ApiOperation({ summary: 'Register new user' })
+  @ApiResponse({
+    status: 201,
+    description: 'It will return the user in the response',
+  })
   signup(@Body() userDto: CreateUserDTO): Promise<User> {
     return this.userService.create(userDto);
   }

@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Artist } from 'src/entities/artists/artists.entity';
+import { Artist } from 'src/artists/artists.entity';
 import { ArtistSignupDto } from './dto/create-artist-dto';
 import * as bcrypt from 'bcryptjs';
 import { ArtistLoginDto } from './dto/artist-login-dto';
-import { User } from 'src/entities/users/users.entity';
+import { User } from 'src/users/users.entity';
 
 @Injectable()
 export class ArtistsService {

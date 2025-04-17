@@ -8,7 +8,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { Playlist } from 'src/entities/playlists/playlist.entity';
+import { Playlist } from 'src/playlists/playlist.entity';
 import { CreatePlayListDto } from 'src/playlists/dto/create-playlist-dto';
 import { UpdatePlayListDto } from './dto/update-playlist.dto';
 import { PlayListsService } from 'src/playlists/playLists.service';

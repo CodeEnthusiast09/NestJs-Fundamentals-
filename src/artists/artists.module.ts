@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Artist } from 'src/entities/artists/artists.entity';
+import { Artist } from 'src/artists/artists.entity';
 import { ArtistsController } from './artists.controller';
 import { UsersModule } from 'src/users/users.module';
 

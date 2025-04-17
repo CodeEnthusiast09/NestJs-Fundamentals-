@@ -9,7 +9,7 @@ import { ArtistLoginDto } from 'src/artists/dto/artist-login-dto';
 import { Enable2FAType } from './types/auth-types';
 import * as speakeasy from 'speakeasy';
 import { UpdateResult } from 'typeorm';
-import { User } from 'src/entities/users/users.entity';
+import { User } from 'src/users/users.entity';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()

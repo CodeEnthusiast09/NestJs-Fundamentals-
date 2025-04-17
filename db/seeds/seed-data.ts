@@ -54,14 +54,14 @@
 //   }
 // };
 
-import { Artist } from '../../src/entities/artists/artists.entity';
-import { User } from '../../src/entities/users/users.entity';
+import { Artist } from '../../src/artists/artists.entity';
+import { User } from '../../src/users/users.entity';
 import { EntityManager } from 'typeorm';
 import { faker } from '@faker-js/faker';
 import { v4 as uuid4 } from 'uuid';
 import * as bcrypt from 'bcryptjs';
-import { Playlist } from '../../src/entities/playlists/playlist.entity';
-import { Song } from 'src/entities/songs/songs.entity';
+import { Playlist } from '../../src/playlists/playlist.entity';
+import { Song } from 'src/songs/songs.entity';
 
 export const seedData = async (manager: EntityManager): Promise<void> => {
   await seedUser();

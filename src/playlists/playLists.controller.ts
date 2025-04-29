@@ -13,8 +13,11 @@ import { CreatePlayListDto } from 'src/playlists/dto/create-playlist-dto';
 import { UpdatePlayListDto } from './dto/update-playlist.dto';
 import { PlayListsService } from 'src/playlists/playLists.service';
 import { JwtAuthGuard } from 'src/auth/jwt-guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('playlists')
+@ApiTags('Playlists')
+@ApiBearerAuth('JWT-auth')
 export class PlayListsController {
   constructor(private playListService: PlayListsService) {}
 

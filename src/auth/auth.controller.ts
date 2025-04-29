@@ -10,10 +10,14 @@ import { Artist } from 'src/artists/artists.entity';
 import { ArtistLoginDto } from 'src/artists/dto/artist-login-dto';
 import { JwtAuthGuard } from './jwt-guard';
 import { Enable2FAType } from './types/auth-types';
-import { UpdateResult } from 'typeorm';
 import { ValidateTokenDTO } from './dto/validate-token-dto';
 import { AuthGuard } from '@nestjs/passport';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('auth')
 @ApiTags('Authentication')
@@ -29,22 +33,48 @@ export class AuthController {
   @ApiResponse({
     status: 201,
     description: 'It will return the user in the response',
+    schema: {
+      properties: {
+        success: { type: 'boolean' },
+        message: { type: 'string' },
+        user: { type: 'object', description: 'User object (optional)' },
+      },
+    },
   })
-  signup(@Body() userDto: CreateUserDTO): Promise<User> {
+  signup(
+    @Body() userDto: CreateUserDTO,
+  ): Promise<{ success: boolean; message: string; user?: User }> {
     return this.userService.create(userDto);
   }
 
   @Post('login')
+  @ApiOperation({ summary: 'Login user' })
+  @ApiResponse({
+    status: 200,
+    description: 'It will give you the access_token in the response',
+  })
   login(@Body() loginDTO: LoginDTO) {
     return this.authService.login(loginDTO);
   }
 
-  @Post('artistSignup')
-  artistSignup(@Body() artistDto: ArtistSignupDto): Promise<Artist> {
+  @Post('artist/signup')
+  @ApiOperation({ summary: 'Register artist' })
+  @ApiResponse({
+    status: 200,
+    description: 'It will the artist in the response',
+  })
+  artistSignup(
+    @Body() artistDto: ArtistSignupDto,
+  ): Promise<{ success: boolean; message: string; artist?: Artist }> {
     return this.artistService.create(artistDto);
   }
 
-  @Post('artistLogin')
+  @Post('artist/login')
+  @ApiOperation({ summary: 'Login artist' })
+  @ApiResponse({
+    status: 200,
+    description: 'It will give you the access_token in the response',
+  })
   artistLogin(@Body() artistLoginDto: ArtistLoginDto) {
     return this.authService.artistLogin(artistLoginDto);
   }
@@ -64,11 +94,11 @@ export class AuthController {
   async disable2FA(
     @Req()
     request,
-  ): Promise<UpdateResult> {
+  ): Promise<{ success: boolean; message: string }> {
     await this.authService.disable2FA(request.user.userId);
     return {
-      raw: '2FA successfully disabled',
-      generatedMaps: [{ raw: '2FA successfully disabled' }],
+      success: true,
+      message: 'Two-factor authentication successfully disabled',
     };
   }
 
@@ -78,15 +108,16 @@ export class AuthController {
     @Req()
     request,
     @Body()
-    ValidateTokenDTO: ValidateTokenDTO,
+    validateTokenDTO: ValidateTokenDTO,
   ): Promise<{ verified: boolean }> {
     return this.authService.validate2FAToken(
       request.user.userId,
-      ValidateTokenDTO.token,
+      validateTokenDTO.token,
     );
   }
 
   @Get('profile')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AuthGuard('bearer'))
   getProfile(
     @Req()

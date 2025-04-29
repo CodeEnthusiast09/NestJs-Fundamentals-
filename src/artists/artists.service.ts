@@ -21,29 +21,49 @@ export class ArtistsService {
     return this.artistRepo.findOneBy({ user: { id: userId } });
   }
 
-  async create(artistDto: ArtistSignupDto): Promise<Artist> {
-    const user = await this.userRepository.findOne({
-      where: { id: artistDto.userId },
-    });
+  async create(
+    artistDto: ArtistSignupDto,
+  ): Promise<{ success: boolean; message: string; artist?: Artist }> {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { id: artistDto.userId },
+      });
 
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+
+      const salt = await bcrypt.genSalt();
+
+      artistDto.password = await bcrypt.hash(artistDto.password, salt);
+
+      const newArtist = this.artistRepo.create({
+        ...artistDto,
+        user: user,
+      });
+
+      const savedArtist = await this.artistRepo.save(newArtist);
+
+      delete savedArtist.password;
+
+      return {
+        success: true,
+        message: 'Artist created successfully',
+        artist: savedArtist,
+      };
+    } catch (error) {
+      if (error.code === '23505' && error.detail?.includes('email')) {
+        return {
+          success: false,
+          message: 'Email already in use.',
+        };
+      }
+
+      return {
+        success: false,
+        message: 'Failed to create artist. Please try again.',
+      };
     }
-
-    const salt = await bcrypt.genSalt();
-
-    artistDto.password = await bcrypt.hash(artistDto.password, salt);
-
-    const newArtist = this.artistRepo.create({
-      ...artistDto,
-      user: user,
-    });
-
-    const savedArtist = await this.artistRepo.save(newArtist);
-
-    delete savedArtist.password;
-
-    return savedArtist;
   }
 
   async findOne(data: ArtistLoginDto): Promise<Artist> {

@@ -6,9 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ArtistsService } from 'src/artists/artists.service';
 import { PayloadType } from './types/payload-types';
 import { ArtistLoginDto } from 'src/artists/dto/artist-login-dto';
-import { Enable2FAType } from './types/auth-types';
 import * as speakeasy from 'speakeasy';
-import { UpdateResult } from 'typeorm';
 import { User } from 'src/users/users.entity';
 import { ConfigService } from '@nestjs/config';
 
@@ -30,33 +28,52 @@ export class AuthService {
   async login(
     loginDTO: LoginDTO,
   ): Promise<
-    { accessToken: string } | { validate2FA: string; message: string }
+    | { success: boolean; message: string; accessToken: string }
+    | { validate2FA: string; message: string }
+    | { success: false; message: string }
   > {
-    const user = await this.userService.findOne(loginDTO);
-    const passwordMatched = await bcrypt.compare(
-      loginDTO.password,
-      user.password,
-    );
-    if (passwordMatched) {
+    try {
+      const user = await this.userService.findOne(loginDTO);
+
+      const passwordMatched = await bcrypt.compare(
+        loginDTO.password,
+        user.password,
+      );
+
+      if (!passwordMatched) {
+        return {
+          success: false,
+          message: 'Invalid email or password.',
+        };
+      }
+
       delete user.password;
 
       const payload: PayloadType = { email: user.email, userId: user.id };
 
       const artist = await this.artistService.findArtist(user.id);
+
       if (artist) {
         payload.artistId = artist.id;
       }
+
       if (user.enable2FA && user.twoFASecret) {
         return {
           validate2FA: 'http://localhost:3000/auth/validate-2fa',
           message: 'Enter one-time password/token from your Authenticator App',
         };
       }
+
       return {
+        success: true,
+        message: 'Login successful',
         accessToken: this.jwtService.sign(payload),
       };
-    } else {
-      throw new UnauthorizedException('Password does not match');
+    } catch (err) {
+      return {
+        success: false,
+        message: 'Invalid email or passward',
+      };
     }
   }
 
@@ -83,26 +100,51 @@ export class AuthService {
     };
   }
 
-  async enable2FA(userId: string): Promise<Enable2FAType> {
-    const user = await this.userService.findById(userId);
-    if (user.enable2FA) {
-      return { secret: user.twoFASecret };
+  async enable2FA(
+    userId: string,
+  ): Promise<{ message: string; secret: string }> {
+    try {
+      const user = await this.userService.findById(userId);
+
+      if (user.enable2FA) {
+        return {
+          message: 'Enter the key into your authenticator app to generate OTP',
+          secret: user.twoFASecret,
+        };
+      }
+
+      const secret = speakeasy.generateSecret();
+
+      user.twoFASecret = secret.base32;
+
+      await this.userService.updateSecretKey(user.id, user.twoFASecret);
+
+      return {
+        message: 'Enter the key into your authenticator app to generate OTP',
+        secret: user.twoFASecret,
+      };
+    } catch (error) {
+      return {
+        message: 'Failed to enable 2FA. Please try again.',
+        secret: '',
+      };
     }
-    const secret = speakeasy.generateSecret();
-    // console.log(secret);
-    user.twoFASecret = secret.base32;
-    await this.userService.updateSecretKey(user.id, user.twoFASecret);
-    return { secret: user.twoFASecret };
   }
 
-  async disable2FA(userId: string): Promise<UpdateResult> {
-    return this.userService.disable2FA(userId);
+  async disable2FA(
+    userId: string,
+  ): Promise<{ success: boolean; message: string }> {
+    await this.userService.disable2FA(userId);
+    return {
+      success: true,
+      message: 'Two-factor authentication successfully disabled',
+    };
   }
 
   async validate2FAToken(
     userId: string,
     token: string,
-  ): Promise<{ verified: boolean }> {
+  ): Promise<{ verified: boolean; message: string }> {
     try {
       const user = await this.userService.findById(userId);
 
@@ -112,9 +154,15 @@ export class AuthService {
         encoding: 'base32',
       });
       if (verified) {
-        return { verified: true };
+        return {
+          verified: true,
+          message: 'Two-factor authentication successfully enabled',
+        };
       } else {
-        return { verified: false };
+        return {
+          verified: false,
+          message: 'Invalid or expired verification token',
+        };
       }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {

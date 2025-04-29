@@ -26,8 +26,11 @@ import {
   normalizePagination,
 } from 'src/common/utils/pagination.utils';
 import { Request as ExpressRequest } from 'express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('songs')
+@ApiTags('Songs')
+@ApiBearerAuth('JWT-auth')
 export class SongsController {
   constructor(
     @Inject('CONNECTION')
@@ -51,11 +54,11 @@ export class SongsController {
 
   @Get()
   findall(
-    @Query('page', ...createPaginationDecorators()) page: number = 1,
+    @Query('page', ...createPaginationDecorators()) page = 1,
     @Query('limit', ...createPaginationDecorators())
-    limit: number = 10,
+    limit = 10,
     @Query('sortBy', ...createPaginationDecorators())
-    sortBy: string = 'releaseDate',
+    sortBy = 'releaseDate',
     @Query('order', ...createPaginationDecorators())
     order: 'ASC' | 'DESC' = 'DESC',
   ): Promise<Pagination<Song>> {

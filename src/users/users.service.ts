@@ -14,33 +14,38 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async create(userDTO: CreateUserDTO): Promise<User> {
-    const user = new User();
+  async create(
+    userDTO: CreateUserDTO,
+  ): Promise<{ success: boolean; message: string; user?: User }> {
+    try {
+      const user = new User();
+      user.firstName = userDTO.firstName;
+      user.lastName = userDTO.lastName;
+      user.email = userDTO.email;
+      const salt = await bcrypt.genSalt();
+      user.password = await bcrypt.hash(userDTO.password, salt);
+      user.apiKey = uuid4();
+      const savedUser = await this.userRepository.save(user);
+      delete savedUser.password;
 
-    user.firstName = userDTO.firstName;
+      return {
+        success: true,
+        message: 'User created successfully',
+        user: savedUser,
+      };
+    } catch (error) {
+      if (error.code === '23505' && error.detail?.includes('email')) {
+        return {
+          success: false,
+          message: 'Email already in use.',
+        };
+      }
 
-    user.lastName = userDTO.lastName;
-
-    user.email = userDTO.email;
-
-    const salt = await bcrypt.genSalt();
-    user.password = await bcrypt.hash(userDTO.password, salt);
-
-    user.apiKey = uuid4();
-
-    const savedUser = await this.userRepository.save(user);
-
-    delete savedUser.password;
-
-    return savedUser;
-
-    // const user = new User();
-    // const salt = await bcrypt.genSalt();
-    // userDTO.password = await bcrypt.hash(userDTO.password, salt);
-    // user.apiKey = uuid4();
-    // const savedUser = await this.userRepository.save(userDTO);
-    // delete savedUser.password;
-    // return savedUser;
+      return {
+        success: false,
+        message: 'Failed to create user. Please try again.',
+      };
+    }
   }
 
   async findOne(data: LoginDTO): Promise<User> {

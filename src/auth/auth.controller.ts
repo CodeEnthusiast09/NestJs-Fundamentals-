@@ -11,7 +11,7 @@ import { ArtistLoginDto } from 'src/artists/dto/artist-login-dto';
 import { JwtAuthGuard } from './jwt-guard';
 import { Enable2FAType } from './types/auth-types';
 import { ValidateTokenDTO } from './dto/validate-token-dto';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -80,6 +80,7 @@ export class AuthController {
   }
 
   @Post('enable-2fa')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   enable2FA(
     @Req()
@@ -90,6 +91,7 @@ export class AuthController {
   }
 
   @Get('disable-2fa')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   async disable2FA(
     @Req()
@@ -103,6 +105,7 @@ export class AuthController {
   }
 
   @Post('validate-2fa')
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(JwtAuthGuard)
   validate2FA(
     @Req()
@@ -116,22 +119,22 @@ export class AuthController {
     );
   }
 
-  @Get('profile')
-  @ApiBearerAuth('JWT-auth')
-  @UseGuards(AuthGuard('bearer'))
-  getProfile(
-    @Req()
-    request,
-  ) {
-    delete request.user.password;
-    return {
-      msg: 'authenticated with api key',
-      user: request.user,
-    };
-  }
+  // @Get('profile')
+  // @ApiBearerAuth('JWT-auth')
+  // @UseGuards(AuthGuard('bearer'))
+  // getProfile(
+  //   @Req()
+  //   request,
+  // ) {
+  //   delete request.user.password;
+  //   return {
+  //     msg: 'authenticated with api key',
+  //     user: request.user,
+  //   };
+  // }
 
-  @Get('test')
-  testEnv() {
-    return this.authService.getEnvVariables();
-  }
+  // @Get('test')
+  // testEnv() {
+  //   return this.authService.getEnvVariables();
+  // }
 }

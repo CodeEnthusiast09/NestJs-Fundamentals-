@@ -1,15 +1,8 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SongsModule } from './songs/songs.module';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { DevConfigService } from './common/providers/DevConfigService';
-// import { DataSource } from 'typeorm';
 import { PlayListsModule } from 'src/playlists/playLists.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
@@ -34,7 +27,7 @@ const proConfig = { port: 4000 };
     UsersModule,
     ArtistsModule,
     ConfigModule.forRoot({
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`],
       isGlobal: true,
       load: [configuration],
       validate: validate,
@@ -56,13 +49,4 @@ const proConfig = { port: 4000 };
     },
   ],
 })
-export class AppModule implements NestModule {
-  constructor(/*private dataSource: DataSource*/) {
-    // console.log('Database Name:', this.dataSource.driver.database);
-  }
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes({ path: 'songs', method: RequestMethod.POST });
-  }
-}
+export class AppModule {}

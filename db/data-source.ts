@@ -4,6 +4,9 @@ import {
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import { config as dotenvConfig } from 'dotenv';
+
+dotenvConfig({ path: '.env.development' });
 
 export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
   imports: [ConfigModule],
